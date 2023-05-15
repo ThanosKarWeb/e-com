@@ -2,6 +2,7 @@ const fs = require('fs');
 const crypto = require('crypto');
 
 module.exports = class Repository {
+  
     constructor(filename) {
         if (!filename) {
           throw new Error('Creating a repository requires a filename');
@@ -19,7 +20,7 @@ module.exports = class Repository {
         attrs.id = this.randomId();
 
         const records = await this.getAll();
-        records.push(attr);
+        records.push(attrs);
         await this.writeAll(records);
 
         return attrs;

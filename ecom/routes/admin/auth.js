@@ -1,6 +1,6 @@
 const express = require("express");
 
-const {handleErrors} = require('./middlewares');
+const { handleErrors } = require("./middlewares");
 const usersRepo = require("../../repositories/users");
 const signupTemplate = require("../../views/admin/auth/signup");
 const signinTemplate = require("../../views/admin/auth/signin");
@@ -23,19 +23,18 @@ router.post(
   [requireEmail, requirePassword, requirePasswordConfirmation],
   handleErrors(signupTemplate),
   async (req, res) => {
-    
     const { email, password, passwordConfirmation } = req.body;
     const user = await usersRepo.create({ email, password });
 
     req.session.userId = user.id;
 
-    res.send("Account created!!!");
+    res.redirect("/admin/products");
   }
 );
 
 router.get("/signout", (req, res) => {
   req.session = null;
-  res.send("you are logged out");
+  res.redirect("/signin");
 });
 
 router.get("/signin", (req, res) => {
@@ -47,12 +46,11 @@ router.post(
   [requireValidPasswordForUser, requireEmailExists],
   handleErrors(signinTemplate),
   async (req, res) => {
-
     const { email } = req.body;
     const user = await usersRepo.getOneBy({ email });
 
     req.session.userId = user.id;
-    res.send("You are signed in");
+    res.redirect("/admin/products");
   }
 );
 
